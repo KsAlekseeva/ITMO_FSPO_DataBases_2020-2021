@@ -164,6 +164,71 @@
 <h1 id="mongodb">MongoDB</h1>
 <h2 id="_1">Измененная модель БД</h2>
 <p><img alt="" src="../%D0%BC%D0%BE%D0%B4%D0%B5%D0%BB%D1%8C.png" /></p>
+<pre><code>use hotel
+'switched to db hotel'
+
+&gt; db.room.insertMany([{floor: 1, cost: 4500, type: &quot;comfort&quot;}, 
+                       {floor: 1, cost: 2500, type: &quot;usual&quot;}, 
+                       {floor: 2, cost: 2500, type: &quot;usual&quot;}, 
+                       {floor: 2, cost: 7000, type: &quot;lux&quot;}])
+{ acknowledged: true,
+  insertedIds: 
+   { '0': ObjectId(&quot;60aacba1aa526da27932c6d2&quot;),
+     '1': ObjectId(&quot;60aacba1aa526da27932c6d3&quot;),
+     '2': ObjectId(&quot;60aacba1aa526da27932c6d4&quot;),
+     '3': ObjectId(&quot;60aacba1aa526da27932c6d5&quot;) } }
+
+
+&gt; db.employee.insertMany([
+            {fullname: &quot;Evgeniy&quot;, post: &quot;cleaner&quot;, contact_detail: &quot;+98792463242&quot;, exp: 3, terms_of_contract: &quot;sdkjbfskfvs&quot;}, 
+            {fullname: &quot;Vanya&quot;, post: &quot;cleaner&quot;, contact_detail: &quot;+9879249999&quot;, exp: 1, terms_of_contract: &quot;oopsodafvs&quot;}, 
+            {fullname: &quot;Sergey&quot;, post: &quot;cleaner&quot;, contact_detail: &quot;+9247121240&quot;, exp: 3, terms_of_contract: &quot;laolsewmds&quot;}, 
+            {fullname: &quot;Anya&quot;, post: &quot;administrator&quot;, contact_detail: &quot;+980281823&quot;, exp: 5, terms_of_contract: &quot;sduiuiuiuiuiuis&quot;}, 
+            {fullname: &quot;Gosha&quot;, post: &quot;administrator&quot;, contact_detail: &quot;+9777654444&quot;, exp: 4, terms_of_contract: &quot;soaoaoaoaoaoa&quot;}, 
+            {fullname: &quot;Diana&quot;, post: &quot;administrator&quot;, contact_detail: &quot;+90001928&quot;, exp: 0.5, terms_of_contract: &quot;jijijijijij&quot;}
+])
+{ acknowledged: true,
+  insertedIds: 
+   { '0': ObjectId(&quot;60aace03aa526da27932c6d6&quot;),
+     '1': ObjectId(&quot;60aace03aa526da27932c6d7&quot;),
+     '2': ObjectId(&quot;60aace03aa526da27932c6d8&quot;),
+     '3': ObjectId(&quot;60aace03aa526da27932c6d9&quot;),
+     '4': ObjectId(&quot;60aace03aa526da27932c6da&quot;),
+     '5': ObjectId(&quot;60aace03aa526da27932c6db&quot;) } }
+
+
+&gt; var em_id = db.employee.findOne({fullname: &quot;Vanya&quot;})._id
+&gt; db.cleaning.insertOne({employee: new DBRef(&quot;employee&quot;, em_id), floor: 1, date: new Date(&quot;2009-06-01&quot;)})
+{ acknowledged: true,
+  insertedId: ObjectId(&quot;60aacfa2aa526da27932c6dc&quot;) }
+
+&gt; var em_id = db.employee.findOne({fullname: &quot;Sergey&quot;})._id
+&gt; db.cleaning.insertOne({employee: new DBRef(&quot;employee&quot;, em_id), floor: 1, date: new Date(&quot;2001-08-05&quot;)})
+{ acknowledged: true,
+  insertedId: ObjectId(&quot;60aad013aa526da27932c6dd&quot;) }
+
+&gt; var adm_id = db.employee.findOne({fullname: &quot;Anya&quot;})._id
+&gt; var room_id = db.room.findOne({floor: 1, cost: 2500})._id
+&gt; db.client.insertOne({fullname: &quot;Alekseeva Oksana&quot;, 
+                        passport:  463745, 
+                        city:  'Saint-Petersburg', 
+                        room: new DBRef(&quot;room&quot;, room_id), 
+                        adm: new DBRef(&quot;employee&quot;, adm_id), 
+                        check_in: new Date(&quot;2000-05-05&quot;), 
+                        check_out: new Date(&quot;2000-05-15&quot;)})
+{ acknowledged: true,
+  insertedId: ObjectId(&quot;60aad1c2aa526da27932c6de&quot;) }
+
+&gt; db.client.insertOne({fullname: &quot;Mikhailova Alevtina&quot;, 
+                        passport:  8871928, 
+                        city:  'Saint-Petersburg', 
+                        room: new DBRef(&quot;room&quot;, room_id), 
+                        adm: new DBRef(&quot;employee&quot;, adm_id), 
+                        check_in: new Date(&quot;2000-01-15&quot;), 
+                        check_out: new Date(&quot;2000-01-20&quot;)})
+{ acknowledged: true,
+  insertedId: ObjectId(&quot;60aad24baa526da27932c6df&quot;) }
+</code></pre>
 <h2 id="1">1</h2>
 <h3 id="spb-8871925">Выбор пользователей, которые живут в городе 'SPb' и их паспорт &gt; 8871925.</h3>
 <p><img alt="" src="../1.png" /></p>
